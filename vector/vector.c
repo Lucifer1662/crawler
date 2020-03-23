@@ -43,14 +43,14 @@ void push_back(vector *v, void *item)
     v->size++;
 }
 
-void pop_back_item(vector *v, void *item)
+void pop_back(vector *v, void* back)
 {
     v->size--;
     void *end = at(v, v->size);
-    memcpy(item, end, v->sizeOfItem);
+    memcpy(back, end, v->sizeOfItem);
 }
 
-void pop_back(vector *v)
+void pop_back_free(vector *v)
 {
     v->size--;
     void *end = at(v, v->size);

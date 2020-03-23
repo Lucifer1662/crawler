@@ -11,18 +11,16 @@
 
 int str_equal(char **str1, char **str2)
 {
-    //printf("%d cmp %s, %s\n",strcmp(*str1, *str2), *str1, *str2);
     return strcmp(*str1, *str2) == 0;
 }
 
 
-void fetch_page_add_hrefs(char* url, vector* sitesVisted, vector* queueSites){
+void fetch_page_add_hrefs(char* url, vector* queueSites){
     char *host = get_host(url);
-    push_back_str(sitesVisted, url);
 
     Http_Response response = fetch_page_url(url);  
     vector links = get_links(response.body);
-
+    free_http_response(response);
     
     map_inplace(&links, refactor_url, host);
 
@@ -32,8 +30,7 @@ void fetch_page_add_hrefs(char* url, vector* sitesVisted, vector* queueSites){
     //filter out visited or plan to vist urls
     for (int i = 0; i < links.size; i++)
     {
-        if (!vector_any(queueSites, at(&links, i), str_equal) &&
-            !vector_any(sitesVisted, at(&links, i), str_equal)){
+        if (!vector_any(queueSites, at(&links, i), str_equal)){
             char *url = queueSites->copy_element(at(&links, i));
             push_back(queueSites, &url);
         }
@@ -42,31 +39,28 @@ void fetch_page_add_hrefs(char* url, vector* sitesVisted, vector* queueSites){
     free_vector(&links);
 }
 
-int main(int argc, char **argv)
-{
-
-    vector sitesVisted = create_vector_strings();
+int main(int argc, char **argv){
     vector queueSites = create_vector_strings();
-    char **visited;
-    if (argc < 2)
-    {
+    if (argc < 2){
         puts("Parameters: <url>");
         exit(0);
     }
-
-    char *url = strdup(argv[1]);
-
+    char *fist_url = strdup(argv[1]);
+    push_back(&queueSites, &fist_url);
     
-    fetch_page_add_hrefs(url, &sitesVisted, &queueSites);
-    printf("%s\n", url);
-
-    printf("Queue\n");
-    for (int i = 0; i < queueSites.size; i++)
-    {
-        printf("%s\n", at_str(&queueSites, i));
+    // char* url1 = strdup("http://www.johnnojohn.com/");
+    // push_back(&queueSites, &url1);
+    // char* url2 = strdup("http://www.ibdhost.com/");
+    // push_back(&queueSites, &url2);
+    // char* url3 = strdup("http://www.johnnojohn.com/style/style.css");
+    // push_back(&queueSites, &url3);
+ 
+    for (size_t i = 0; i < queueSites.size; i++){   
+        char* url = at_str(&queueSites, i);
+        printf("%s\n", url);
+        fetch_page_add_hrefs(url, &queueSites);
     }
-
+    
     free_vector(&queueSites);
-    free_vector(&sitesVisted);
     return 0;
 }

@@ -16,6 +16,8 @@ typedef struct Http_Response_T Http_Response;
 
 
 
+void free_http_response(Http_Response response);
+
 Http_Response fetch_page_url(char* url);
 Http_Response fetch_page_uri(Uri uri);
 

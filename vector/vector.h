@@ -18,9 +18,9 @@ void increase_cap(vector* v);
 
 void push_back(vector* v, void* item);
 
-void pop_back_item(vector* v, void* result);
+void pop_back_free(vector* v);
 
-void pop_back(vector* v);
+void pop_back(vector* v, void* back);
 
 void free_vector(vector* v);
 

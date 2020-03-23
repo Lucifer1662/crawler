@@ -12,11 +12,8 @@ vector get_links(char *html)
     while (1){
         char *href = strstr(html, "href");
         if (href == NULL)
-        {
-            printf("No HREF");
             break;
-        }
-
+            
         char *openingQuote = strchr(href, '"') + 1;
         if (openingQuote == NULL)
             break;
@@ -26,7 +23,7 @@ vector get_links(char *html)
             break;
 
         int linkLength = closingQuote - openingQuote;
-        
+
         char *link = strndup(openingQuote, linkLength);
         push_back(&links, &link);
 

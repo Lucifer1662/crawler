@@ -33,7 +33,11 @@ char* get_host(char* url){
 }
 
 char* get_path(char* url){
-    url = &url[START_OF_HOST];
+    if(starts_with(".", url))
+        return url;
+    if(starts_with(HTTP_STR, url))
+        url = &url[START_OF_HOST];
+
     char* slash_ptr = strchr(url, '/');
     if(slash_ptr == NULL){
         return NULL;
@@ -62,7 +66,6 @@ char* refactor_url(char** url_ptr, char* host){
         char* newUrl = malloc(newLength*sizeof(char));
 
         sprintf(newUrl, "%s%s%s", HTTP_STR, host, *url_ptr);
-        printf("Refactor %s, %s\n", *url_ptr, newUrl);
 
         free(*url_ptr);
         *url_ptr = newUrl;
@@ -76,15 +79,12 @@ char* refactor_url(char** url_ptr, char* host){
 
 int starts_with(char *start, char *str)
 {
-    int i = 0;
     if (strlen(start) > strlen(str)){
         return 0;
     }
-    for (; start[i] != 0 && str[i] != 0; i++){
+    for (int i = 0; start[i] != 0 && str[i] != 0; i++){
         if (start[i] != str[i])
-        {
             return 0;
-        }
     }
     return 1;
 }
@@ -96,9 +96,9 @@ int is_relative_path(char *url)
         return 0;
 
     char* dot_ptr = strrchr(path, '.');
-    if(dot_ptr == NULL)
-        return 0;
-    return strchr(dot_ptr, '/')!=NULL;
+    if(dot_ptr)
+        return 1;
+    return strchr(url, '/')!=NULL;
 }
 
 int is_valid_url(char **link)
