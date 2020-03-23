@@ -58,14 +58,16 @@ void delete_uri(Uri uri){
 
 
 
-char* refactor_url(char** url_ptr, char* host){
+char* refactor_url(char** url_ptr, char* host, char* host_url){
     if(!starts_with(HTTP_STR, *url_ptr)){
+        char* relative = starts_with("/", *url_ptr) ? host : host_url;
+
         int newLength = strlen(HTTP_STR)
-        + strlen(host) + strlen(*url_ptr) + 1;
+        + strlen(relative) + strlen(*url_ptr) + 1;
 
         char* newUrl = malloc(newLength*sizeof(char));
 
-        sprintf(newUrl, "%s%s%s", HTTP_STR, host, *url_ptr);
+        sprintf(newUrl, "%s%s%s", HTTP_STR, relative, *url_ptr);
 
         free(*url_ptr);
         *url_ptr = newUrl;
@@ -91,14 +93,7 @@ int starts_with(char *start, char *str)
 
 int is_relative_path(char *url)
 {
-    char* path = get_path(url);
-    if(path == NULL)
-        return 0;
-
-    char* dot_ptr = strrchr(path, '.');
-    if(dot_ptr)
-        return 1;
-    return strchr(url, '/')!=NULL;
+    return strstr(url, "./") != NULL ||  strstr(url, "..") != NULL;
 }
 
 int is_valid_url(char **link)

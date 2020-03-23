@@ -22,7 +22,7 @@ void fetch_page_add_hrefs(char* url, vector* queueSites){
     vector links = get_links(response.body);
     free_http_response(response);
     
-    map_inplace(&links, refactor_url, host);
+    map_inplace(&links, refactor_url, host, url);
 
     //filter out invalid responses
     filter(&links, is_valid_url);
