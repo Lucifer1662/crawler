@@ -15,8 +15,8 @@ char* get_host(char* url);
 
 Uri create_uri(char* url);
 
-char* refactor_url(char** url, char* host, char* host_url);
+void refactor_url(char** url, char* host, char* host_url);
 int starts_with(char *start, char *str);
 int is_relative_path(char *url);
-int is_valid_url(char **link);
+int is_valid_url(char *link);
 #endif

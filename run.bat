@@ -1,0 +1,1 @@
+rm crawler.exe -rf && make && crawler http://www.benscott.co.uk/

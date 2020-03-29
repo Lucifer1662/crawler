@@ -2,12 +2,16 @@
 #include "string.h"
 #include "stdlib.h"
 
-char* indirect_strdup(char** strPtr){
-    return strdup(*strPtr);
+char* void_ptr_to_str(void* str){
+    return *(char**)str;
 }
 
-void indirect_free(char** dataPtr){
-    free(*dataPtr);
+void* indirect_strdup(void* str_ptr){
+    return strdup(void_ptr_to_str(str_ptr));
+}
+
+void indirect_free(void* str_ptr){
+    free(void_ptr_to_str(str_ptr));
 }
 
 vector create_vector_strings(){

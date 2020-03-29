@@ -1,0 +1,1 @@
+rm crawler.exe -rf && make && crawler http://jigsaw.w3.org/HTTP/Basic/
