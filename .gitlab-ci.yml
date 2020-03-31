@@ -1,11 +1,9 @@
-image: ubuntu:19.10
+image: python:3.6
 
 before_script:
     - apt-get -qq update && apt-get install -y -qq gcc make
     - make clean && make -B
-    - apt-get -y install curl
-    - curl http://web1.comp30023/
 
 test:
     script:
-        - python3 test.py tests/web-comp30023-index.txt
+        - python3 test.py tests/jigsaw_redirect_test.txt
