@@ -1,19 +1,28 @@
 #include "uri.h"
+
+#include "../crawler.h"
+#include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
-#include "stdio.h"
-#include "../crawler.h"
 #define START_OF_HOST 7
 #define HTTP_STR "http://"
+#define SLASH_CHAR '/'
+#define SLASH_STR "/"
+#define HOST_COMPONENT_SEPERATOR_STR "."
+#define RELATIVE_SLASH "./"
+#define UP_ONE_DIRECTORY ".."
+#define HOST_COMPONENT_SEPERATOR '.'
+#define FRAGMENT_CHAR '#'
+#define ENCODED_CHAR '%'
 
 Uri create_uri(char* url) {
     char* init_url = url;
     Uri uri;
     url = &url[START_OF_HOST];
-    char* slash_ptr = strchr(url, '/');
+    char* slash_ptr = strchr(url, SLASH_CHAR);
     if (slash_ptr == NULL) {
         uri.host = strdup(init_url);
-        uri.path = strdup("/");
+        uri.path = strdup(SLASH_STR);
         return uri;
     }
     int host_length = slash_ptr - url;
@@ -25,7 +34,7 @@ Uri create_uri(char* url) {
 
 char* get_host(char* url) {
     url = &url[START_OF_HOST];
-    char* slash_ptr = strchr(url, '/');
+    char* slash_ptr = strchr(url, SLASH_CHAR);
     if (slash_ptr == NULL) return strdup(url);
     int host_length = slash_ptr - url;
 
@@ -33,10 +42,10 @@ char* get_host(char* url) {
 }
 
 char* get_path(char* url) {
-    if (starts_with(".", url)) return url;
+    if (starts_with(HOST_COMPONENT_SEPERATOR_STR, url)) return url;
     if (starts_with(HTTP_STR, url)) url = &url[START_OF_HOST];
 
-    char* slash_ptr = strchr(url, '/');
+    char* slash_ptr = strchr(url, SLASH_CHAR);
     if (slash_ptr == NULL) {
         return NULL;
     }
@@ -54,14 +63,13 @@ void refactor_url(char** url_ptr, char* host, char* host_url) {
     host_url += strlen(HTTP_STR);
     if (!starts_with(HTTP_STR, *url_ptr)) {
         char* relative;
-        if(starts_with("/", *url_ptr)){
+        if (starts_with(SLASH_STR, *url_ptr)) {
             relative = strdup(host);
-        }else{
-            char* last_slash = strrchr(host_url, '/');
-            if(last_slash == NULL){
+        } else {
+            char* last_slash = strrchr(host_url, SLASH_CHAR);
+            if (last_slash == NULL) {
                 relative = strdup(host_url);
-            }else
-            {
+            } else {
                 relative = strndup(host_url, last_slash - host_url + 1);
             }
         }
@@ -80,7 +88,7 @@ void refactor_url(char** url_ptr, char* host, char* host_url) {
 
     if (get_path(*url_ptr) == NULL) {
         *url_ptr = realloc(*url_ptr, strlen(*url_ptr) * sizeof(char) + 2);
-        strcat(*url_ptr, "/");
+        strcat(*url_ptr, SLASH_STR);
     }
 }
 
@@ -95,17 +103,17 @@ int starts_with(char* start, char* str) {
 }
 
 int is_relative_path(char* url) {
-    return strstr(url, "./") != NULL || strstr(url, "..") != NULL;
+    return strstr(url, RELATIVE_SLASH) != NULL ||
+           strstr(url, UP_ONE_DIRECTORY) != NULL;
 }
 
-char* chop_off_head(char* host){
-    char* tail = strchr(host, '.');
-    if(tail == NULL)
-        tail = host+strlen(host);
+char* chop_off_head(char* host) {
+    char* tail = strchr(host, HOST_COMPONENT_SEPERATOR);
+    if (tail == NULL) tail = host + strlen(host);
     return tail;
 }
 
-int same_tail_components(char* link1, char* link2){
+int same_tail_components(char* link1, char* link2) {
     char* host1 = get_host(link1);
     char* host2 = get_host(link2);
     char* tail_components1 = chop_off_head(host1);
@@ -117,9 +125,7 @@ int same_tail_components(char* link1, char* link2){
 }
 
 int is_valid_url(char* link) {
-    return !is_relative_path(link) && 
-    strchr(link, '#') == NULL &&
-           strchr(link, '%') == NULL &&
-           same_tail_components(link, main_link)
-           ;
+    return !is_relative_path(link) && strchr(link, FRAGMENT_CHAR) == NULL &&
+           strchr(link, ENCODED_CHAR) == NULL &&
+           same_tail_components(link, main_link);
 }
