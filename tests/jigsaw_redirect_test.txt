@@ -1,0 +1,4 @@
+http://jigsaw.w3.org/HTTP/300/301.html
+http://jigsaw.w3.org/HTTP/300/Overview.html
+http://jigsaw.w3.org/HTTP/300/307.html
+http://jigsaw.w3.org/HTTP/300/302.html

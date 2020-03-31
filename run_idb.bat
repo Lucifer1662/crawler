@@ -1,1 +1,0 @@
-rm crawler.exe -rf && make && crawler http://www.ibdhost.com/help/html/

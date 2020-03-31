@@ -2,6 +2,7 @@
 #include "stdlib.h"
 #include "string.h"
 #include "stdio.h"
+#include "../crawler.h"
 #define START_OF_HOST 7
 #define HTTP_STR "http://"
 
@@ -97,7 +98,28 @@ int is_relative_path(char* url) {
     return strstr(url, "./") != NULL || strstr(url, "..") != NULL;
 }
 
+char* chop_off_head(char* host){
+    char* tail = strchr(host, '.');
+    if(tail == NULL)
+        tail = host+strlen(host);
+    return tail;
+}
+
+int same_tail_components(char* link1, char* link2){
+    char* host1 = get_host(link1);
+    char* host2 = get_host(link2);
+    char* tail_components1 = chop_off_head(host1);
+    char* tail_components2 = chop_off_head(host2);
+    int res = strcmp(tail_components1, tail_components2) == 0;
+    free(host1);
+    free(host2);
+    return res;
+}
+
 int is_valid_url(char* link) {
-    return !is_relative_path(link) && strchr(link, '#') == NULL &&
-           strchr(link, '%') == NULL;
+    return !is_relative_path(link) && 
+    strchr(link, '#') == NULL &&
+           strchr(link, '%') == NULL &&
+           same_tail_components(link, main_link)
+           ;
 }

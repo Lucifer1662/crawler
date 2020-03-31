@@ -1,4 +1,5 @@
 #include "fetch_page.h"
+
 #include <netdb.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,36 +7,21 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+
 #include "../str_util/str_util.h"
 #include "../uri/uri.h"
-#include "../str_util/str_util.h"
-
-
 
 #define AUTH_STR "authorization: Basic "
 
 #define BUFFER_SIZE 2056
-#define HEADER_FORMAT                                              \
-    "GET %s HTTP/1.1\r\n"                                          \
-    "Host: %s\r\n"                                                 \
-    "%s"                                                           \
-    "Connection: keep-alive\r\n"                                   \
-    "Cache-Control: max-age=0\r\n"                                 \
-    "Upgrade-Insecure-Requests: 1\r\n"                             \
-    "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) "       \
-    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 " \
-    "Safari/537.36\r\n"                                            \
-    "Accept: "                                                     \
-    "text/html,application/xhtml+xml,application/xml;q=0.9,image/" \
-    "webp,image/apng,*/*;q=0.8,application/"                       \
-    "signed-exchange;v=b3;q=0.9\r\n"                               \
-    "Accept-Encoding: \r\n"                                        \
-    "Accept-Language: en-AU,en-GB;q=0.9,en-US;q=0.8,en;q=0.7\r\n\r\n"
+#define HEADER_FORMAT                  \
+    "GET %s HTTP/1.1\r\n"              \
+    "Host: %s\r\n"                     \
+    "%s"                               \
+    "User-Agent: lmhawkins"            \
+    "\r\n\r\n"
 #define HTTP_PORT_STR "80"
 #define MAX_HEADER_LENGTH 1000
-
-
-
 
 Http_Response fetch_page_url(char* url, Authorization* auth) {
     Uri uri = create_uri(url);
@@ -82,9 +68,6 @@ char* read_page_length(int sockfd, int length, char* page_remnant) {
     return page;
 }
 
-
-
-
 char* read_header(int sockfd, char** page_remnant) {
     char buf[BUFFER_SIZE];
     memset(buf, 0, sizeof(buf));
@@ -118,7 +101,7 @@ char* create_athorization_line(Authorization* auth) {
 int send_http_get(Uri uri, Authorization* auth) {
     struct addrinfo hints, *res;
     int sockfd;
-    
+
     memset(&hints, 0, sizeof hints);
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
