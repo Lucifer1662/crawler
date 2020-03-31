@@ -1,8 +1,6 @@
 image: python:3.6
 
 before_script:
-    - apt-get update
-    - apt-get install python3.6
     - apt-get -qq update && apt-get install -y -qq gcc make
     - make clean && make -B
 
