@@ -8,4 +8,4 @@ before_script:
 
 test:
     script:
-        - python test.py tests/web-comp30023-index.txt
+        - python3 test.py tests/web-comp30023-index.txt
