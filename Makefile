@@ -9,5 +9,5 @@ $(EXE):
 
 
 clean:
-	rm crawler
+	rm -f crawler
 
