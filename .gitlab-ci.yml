@@ -3,7 +3,7 @@ image: python:3.6
 before_script:
     - apt-get -qq update && apt-get install -y -qq gcc make
     - make clean && make -B
-    - apt-get curl
+    - apt-get install curl
     - curl http://web1.comp30023/
 
 test:
