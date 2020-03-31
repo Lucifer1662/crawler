@@ -6,4 +6,4 @@ before_script:
 
 test:
     script:
-        - python3 test.py tests/web-comp30023-index.txt
+        - python3 test.py tests/jigsaw_redirect_test.txt
