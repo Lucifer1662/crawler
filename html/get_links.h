@@ -2,7 +2,7 @@
 #define GET_LINKS
 #include "../vector/vector.h"
 
-void get_links_symbols(vector* links, char *html, char* href_symbol);
+void get_links_symbols(vector* links, char *html);
 vector get_links(char* html);
 
 #endif

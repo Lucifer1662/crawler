@@ -58,7 +58,7 @@ vector get_links(char *html) {
     convert_anchor_to_lower(html);
 
     vector links = create_vector_strings();
-    get_links_symbols(&links, html, HREF);
+    get_links_symbols(&links, html);
 
     free(html);
     return links;
