@@ -25,6 +25,7 @@
 #define USERNAME "lmhawkins"
 #define PASSWORD "password"
 #define AUTH_64_ENCODED "bG1oYXdraW5zOnBhc3N3b3Jk"
+//#define AUTH_64_ENCODED "bG1oYXdraW5zOnBhc3N3b3Jk"
 
 int str_equal(str str1, str str2) { return strcmp(str1, str2) == 0; }
 
@@ -78,7 +79,6 @@ int handle_response(Http_Response response, char *url, vector *queueSites, Autho
             return TRY_AGAIN_AGAIN;
 
         case MOVED_PERMENTLY_STATUS: {
-            printf("MOVED PERMENTLY %s\n", response.header.redirect);
             char *redirect = response.header.redirect;
             if (!is_str_in(queueSites, redirect)){
                 push_back_str(queueSites, strdup(redirect));
