@@ -68,7 +68,7 @@ void refactor_url(char** url_ptr, char* host, char* host_url) {
     if (!starts_with(HTTP_PROTOCOL_STR, *url_ptr)) {
         char* newUrl;
         if(starts_with(DOUBLE_SLASH_STR, *url_ptr)){
-            newUrl = concat_create(2, HTTP_STR, *host_url);
+            newUrl = concat_create(2, HTTP_STR, *url_ptr);
         }
         else if (starts_with(SLASH_STR, *url_ptr)) {
             //relative = strdup(host);
