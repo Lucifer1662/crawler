@@ -8,6 +8,7 @@
 #define ANCHOR_START_CAP "<A"
 #define ANCHOR_END ">"
 #define HREF "href"
+#define HREF_CAP "HREF"
 #define QUOTE '"'
 #define SINGLE_QUOTE '\''
 
@@ -58,13 +59,14 @@ vector get_links(char *html) {
     convert_anchor_to_lower(html);
 
     vector links = create_vector_strings();
-    get_links_symbols(&links, html);
+    get_links_symbols(&links, html, HREF);
+    get_links_symbols(&links, html, HREF_CAP);
 
     free(html);
     return links;
 }
 
-void get_links_symbols(vector *links, char *html) {
+void get_links_symbols(vector *links, char *html, char *href_symbol) {
     while (*html) {
         // Find anchor start
         char *anchor_start = strstr(html, ANCHOR_START);
@@ -82,7 +84,7 @@ void get_links_symbols(vector *links, char *html) {
 
         int valid_href = 0;
         while (1) {
-            href = strcasecmp(href, HREF);
+            href = strstr(href, href_symbol);
 
             if (href == NULL) break;
             if (anchor_start < href && href < anchor_end &&
@@ -90,7 +92,7 @@ void get_links_symbols(vector *links, char *html) {
                 valid_href = 1;
                 break;
             }
-            href += strlen(HREF);
+            href += strlen(href_symbol);
         }
 
         if (valid_href) {
