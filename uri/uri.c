@@ -4,6 +4,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
+#include "../str_util/str_util.h"
 #define START_OF_HOST 7
 #define HTTP_PROTOCOL_STR "http://"
 #define HTTP_STR "http:"
@@ -65,30 +66,34 @@ void refactor_url(char** url_ptr, char* host, char* host_url) {
     printf("Refactor: %s\n", *url_ptr);
     host_url += strlen(HTTP_PROTOCOL_STR);
     if (!starts_with(HTTP_PROTOCOL_STR, *url_ptr)) {
-        char* relative;
+        char* newUrl;
         if(starts_with(DOUBLE_SLASH_STR, *url_ptr)){
-            relative = strdup(HTTP_STR);
+            newUrl = concat_create(2, HTTP_STR, *host_url);
         }
         else if (starts_with(SLASH_STR, *url_ptr)) {
-            relative = strdup(host);
+            //relative = strdup(host);
+            newUrl = concat_create(3, HTTP_PROTOCOL_STR, host, *url_ptr);
         } else {
             char* last_slash = strrchr(host_url, SLASH_CHAR);
             if (last_slash == NULL) {
-                relative = strdup(host_url);
+                //relative = strdup(host_url);
+                newUrl = concat_create(3, HTTP_PROTOCOL_STR, host_url, *url_ptr);
             } else {
-                relative = strndup(host_url, last_slash - host_url + 1);
+                char* relative = strndup(host_url, last_slash - host_url + 1);
+                newUrl = concat_create(3, HTTP_PROTOCOL_STR, host_url, *url_ptr);
+                free(relative);
             }
         }
 
-        int newLength =
-            strlen(HTTP_PROTOCOL_STR) + strlen(relative) + strlen(*url_ptr) + 1;
+        //int newLength =
+        //    strlen(HTTP_PROTOCOL_STR) + strlen(relative) + strlen(*url_ptr) + 1;
 
-        char* newUrl = malloc(newLength * sizeof(char));
+        //newUrl = malloc(newLength * sizeof(char));
 
-        sprintf(newUrl, "%s%s%s", HTTP_PROTOCOL_STR, relative, *url_ptr);
+        //sprintf(newUrl, "%s%s%s", HTTP_PROTOCOL_STR, relative, *url_ptr);
 
         free(*url_ptr);
-        free(relative);
+        //free(relative);
         *url_ptr = newUrl;
     }
 
