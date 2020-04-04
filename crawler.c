@@ -78,6 +78,7 @@ int handle_response(Http_Response response, char *url, vector *queueSites, Autho
             return TRY_AGAIN_AGAIN;
 
         case MOVED_PERMENTLY_STATUS: {
+            printf("MOVED PERMENTLY\n");
             char *redirect = response.header.redirect;
             if (!is_str_in(queueSites, redirect)){
                 push_back_str(queueSites, strdup(redirect));
