@@ -80,7 +80,7 @@ void refactor_url(char** url_ptr, char* host, char* host_url) {
                 newUrl = concat_create(3, HTTP_PROTOCOL_STR, host_url, *url_ptr);
             } else {
                 char* relative = strndup(host_url, last_slash - host_url + 1);
-                newUrl = concat_create(3, HTTP_PROTOCOL_STR, host_url, *url_ptr);
+                newUrl = concat_create(3, HTTP_PROTOCOL_STR, relative, *url_ptr);
                 free(relative);
             }
         }
