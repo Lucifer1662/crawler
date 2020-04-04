@@ -62,6 +62,7 @@ void delete_uri(Uri uri) {
 }
 
 void refactor_url(char** url_ptr, char* host, char* host_url) {
+    printf("Refactor: %s\n", *url_ptr);
     host_url += strlen(HTTP_PROTOCOL_STR);
     if (!starts_with(HTTP_PROTOCOL_STR, *url_ptr)) {
         char* relative;
