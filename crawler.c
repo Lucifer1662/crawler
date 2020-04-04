@@ -92,9 +92,7 @@ void fetch_page_add_hrefs(char *url, vector *queueSites) {
     int code;
     Authorization auth = create_auth(NULL);
     do {
-        
         Http_Response response = fetch_page_url(url, &auth);
-        printf("Body:\n%s\n\n", response.body);
         code = handle_response(response, url, queueSites, &auth);
         free_http_response(response);
     } while (code == TRY_AGAIN_AGAIN);

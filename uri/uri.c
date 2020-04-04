@@ -17,6 +17,7 @@
 #define HOST_COMPONENT_SEPERATOR '.'
 #define FRAGMENT_CHAR '#'
 #define ENCODED_CHAR '%'
+#define STR_TERMINATING_BYTE 0
 
 Uri create_uri(char* url) {
     char* init_url = url;
@@ -63,7 +64,6 @@ void delete_uri(Uri uri) {
 }
 
 void refactor_url(char** url_ptr, char* host, char* host_url) {
-    printf("Refactor: %s\n", *url_ptr);
     host_url += strlen(HTTP_PROTOCOL_STR);
     if (!starts_with(HTTP_PROTOCOL_STR, *url_ptr)) {
         char* newUrl;
@@ -71,29 +71,19 @@ void refactor_url(char** url_ptr, char* host, char* host_url) {
             newUrl = concat_create(2, HTTP_STR, *url_ptr);
         }
         else if (starts_with(SLASH_STR, *url_ptr)) {
-            //relative = strdup(host);
             newUrl = concat_create(3, HTTP_PROTOCOL_STR, host, *url_ptr);
         } else {
             char* last_slash = strrchr(host_url, SLASH_CHAR);
             if (last_slash == NULL) {
-                //relative = strdup(host_url);
                 newUrl = concat_create(3, HTTP_PROTOCOL_STR, host_url, *url_ptr);
             } else {
-                char* relative = strndup(host_url, last_slash - host_url + 1);
-                newUrl = concat_create(3, HTTP_PROTOCOL_STR, relative, *url_ptr);
-                free(relative);
+                char temp = last_slash[1];
+                last_slash[1] = STR_TERMINATING_BYTE;
+                newUrl = concat_create(3, HTTP_PROTOCOL_STR, host_url, *url_ptr);
+                last_slash[1] = temp;
             }
         }
-
-        //int newLength =
-        //    strlen(HTTP_PROTOCOL_STR) + strlen(relative) + strlen(*url_ptr) + 1;
-
-        //newUrl = malloc(newLength * sizeof(char));
-
-        //sprintf(newUrl, "%s%s%s", HTTP_PROTOCOL_STR, relative, *url_ptr);
-
         free(*url_ptr);
-        //free(relative);
         *url_ptr = newUrl;
     }
 
@@ -136,10 +126,6 @@ int same_tail_components(char* link1, char* link2) {
 }
 
 int is_valid_url(char* link) {
-    int kept =  !is_relative_path(link) && strchr(link, FRAGMENT_CHAR) == NULL &&
-           strchr(link, ENCODED_CHAR) == NULL &&
-           same_tail_components(link, main_link);
-    printf("Kept:%d     %s\n", kept, link);
     return !is_relative_path(link) && strchr(link, FRAGMENT_CHAR) == NULL &&
            strchr(link, ENCODED_CHAR) == NULL &&
            same_tail_components(link, main_link);
