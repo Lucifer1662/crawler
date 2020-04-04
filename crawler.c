@@ -68,7 +68,6 @@ int handle_response(Http_Response response, char *url, vector *queueSites, Autho
         
         case UNATHORIZED_STATUS:
             if(auth->userid_password_64 == NULL){
-                //*auth = create_auth("Z3Vlc3Q6Z3Vlc3Q=");//test
                 *auth = create_auth(AUTH_64_ENCODED);
             }else{
                 //we have already tried and our credentials are wrong
@@ -95,6 +94,7 @@ void fetch_page_add_hrefs(char *url, vector *queueSites) {
     do {
         
         Http_Response response = fetch_page_url(url, &auth);
+        printf("Body:\n%s\n\n", response.body);
         code = handle_response(response, url, queueSites, &auth);
         free_http_response(response);
     } while (code == TRY_AGAIN_AGAIN);
