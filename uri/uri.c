@@ -5,9 +5,11 @@
 #include "stdlib.h"
 #include "string.h"
 #define START_OF_HOST 7
-#define HTTP_STR "http://"
+#define HTTP_PROTOCOL_STR "http://"
+#define HTTP_STR "http:"
 #define SLASH_CHAR '/'
 #define SLASH_STR "/"
+#define DOUBLE_SLASH_STR "//"
 #define HOST_COMPONENT_SEPERATOR_STR "."
 #define RELATIVE_SLASH "./"
 #define UP_ONE_DIRECTORY ".."
@@ -43,7 +45,7 @@ char* get_host(char* url) {
 
 char* get_path(char* url) {
     if (starts_with(HOST_COMPONENT_SEPERATOR_STR, url)) return url;
-    if (starts_with(HTTP_STR, url)) url = &url[START_OF_HOST];
+    if (starts_with(HTTP_PROTOCOL_STR, url)) url = &url[START_OF_HOST];
 
     char* slash_ptr = strchr(url, SLASH_CHAR);
     if (slash_ptr == NULL) {
@@ -60,10 +62,13 @@ void delete_uri(Uri uri) {
 }
 
 void refactor_url(char** url_ptr, char* host, char* host_url) {
-    host_url += strlen(HTTP_STR);
-    if (!starts_with(HTTP_STR, *url_ptr)) {
+    host_url += strlen(HTTP_PROTOCOL_STR);
+    if (!starts_with(HTTP_PROTOCOL_STR, *url_ptr)) {
         char* relative;
-        if (starts_with(SLASH_STR, *url_ptr)) {
+        if(starts_with(DOUBLE_SLASH_STR, *url_ptr)){
+            relative = strdup(HTTP_STR);
+        }
+        else if (starts_with(SLASH_STR, *url_ptr)) {
             relative = strdup(host);
         } else {
             char* last_slash = strrchr(host_url, SLASH_CHAR);
@@ -75,11 +80,11 @@ void refactor_url(char** url_ptr, char* host, char* host_url) {
         }
 
         int newLength =
-            strlen(HTTP_STR) + strlen(relative) + strlen(*url_ptr) + 1;
+            strlen(HTTP_PROTOCOL_STR) + strlen(relative) + strlen(*url_ptr) + 1;
 
         char* newUrl = malloc(newLength * sizeof(char));
 
-        sprintf(newUrl, "%s%s%s", HTTP_STR, relative, *url_ptr);
+        sprintf(newUrl, "%s%s%s", HTTP_PROTOCOL_STR, relative, *url_ptr);
 
         free(*url_ptr);
         free(relative);
