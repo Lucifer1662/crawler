@@ -131,6 +131,10 @@ int same_tail_components(char* link1, char* link2) {
 }
 
 int is_valid_url(char* link) {
+    int kept =  !is_relative_path(link) && strchr(link, FRAGMENT_CHAR) == NULL &&
+           strchr(link, ENCODED_CHAR) == NULL &&
+           same_tail_components(link, main_link);
+    printf("Kept:%d     %s\n", kept, link);
     return !is_relative_path(link) && strchr(link, FRAGMENT_CHAR) == NULL &&
            strchr(link, ENCODED_CHAR) == NULL &&
            same_tail_components(link, main_link);
