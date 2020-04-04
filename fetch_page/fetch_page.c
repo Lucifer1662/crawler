@@ -22,6 +22,7 @@
     "\r\n\r\n"
 #define HTTP_PORT_STR "80"
 #define MAX_HEADER_LENGTH 1000
+#define MAX_REFETCH 3
 
 Http_Response fetch_page_url(char* url, Authorization* auth) {
     Uri uri = create_uri(url);
@@ -124,7 +125,8 @@ int send_http_get(Uri uri, Authorization* auth) {
 Http_Response fetch_page_uri(Uri uri, Authorization* auth) {
     Http_Response response;
     response.body = NULL;
-    while (response.body == NULL) {
+    int refetch_count = 0;
+    while (response.body == NULL && refetch_count < MAX_REFETCH) {
         int socket = send_http_get(uri, auth);
 
         char* page_remnant;
@@ -147,6 +149,8 @@ Http_Response fetch_page_uri(Uri uri, Authorization* auth) {
             response.body =
                 read_page_length(socket, header.content_length, page_remnant);
         }
+
+        refetch_count ++;
 
         free(page_remnant);
         free(response_header);
