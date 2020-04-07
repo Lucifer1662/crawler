@@ -11,21 +11,22 @@
 #define HREF_CAP "HREF"
 #define QUOTE '"'
 #define SINGLE_QUOTE '\''
+#define TRUE 1
+#define FALSE 0
+typedef int bool;
 
-int is_in_quotes(char *str, char *location, char *end) {
-    int res = 0;
+bool is_in_quotes(char *str, char *location, char *end) {
+    bool res = FALSE;
     while (1) {
         char *openingQuote = strchr(str, QUOTE);
         if (openingQuote == NULL || openingQuote > end) break;
 
-        // printf("Opening:%s\n",openingQuote);
         // find ending quote
         char *closingQuote = strchr(openingQuote + 1, QUOTE);
         if (closingQuote == NULL || closingQuote > end) break;
-        // printf("Closeing:%s\n",closingQuote);
 
         if (openingQuote < location && location < closingQuote) {
-            res = 1;
+            res = TRUE;
         }
 
         str = closingQuote + 1;
@@ -82,14 +83,14 @@ void get_links_symbols(vector *links, char *html, char *href_symbol) {
 
         char *href = anchor_start;
 
-        int valid_href = 0;
+        bool valid_href = FALSE;
         while (1) {
             href = strstr(href, href_symbol);
 
             if (href == NULL) break;
             if (anchor_start < href && href < anchor_end &&
                 !is_in_quotes(anchor_start, href, anchor_end)) {
-                valid_href = 1;
+                valid_href = TRUE;
                 break;
             }
             href += strlen(href_symbol);

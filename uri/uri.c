@@ -63,7 +63,7 @@ void delete_uri(Uri uri) {
     free(uri.path);
 }
 
-void refactor_url(char** url_ptr, char* host, char* host_url) {
+void make_absolute_url(char** url_ptr, char* host, char* host_url) {
     host_url += strlen(HTTP_PROTOCOL_STR);
     if (!starts_with(HTTP_PROTOCOL_STR, *url_ptr)) {
         char* newUrl;

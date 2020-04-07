@@ -14,14 +14,14 @@ void main(){
     printf("Add items\n");
     int i = 0;
     assert(v.size == 3);
-    assert(*(int*)at(v, i++) == 5);
-    assert(*(int*)at(v, i++) == 5);
-    assert(*(int*)at(v, i++) == 3);
+    assert(*(int*)at(&v, i++) == 5);
+    assert(*(int*)at(&v, i++) == 5);
+    assert(*(int*)at(&v, i++) == 3);
     assert(v.size == 3);
     printf("Popping Back");
     int res;
     pop_back(&v, &res);
     assert(v.size == 2);
     assert(res == 3);
-    free_vector(v);
+    free_vector(&v);
 }

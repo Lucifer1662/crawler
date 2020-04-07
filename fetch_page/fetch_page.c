@@ -29,6 +29,11 @@ Http_Response fetch_page_url(char* url, Authorization* auth) {
     return fetch_page_uri(uri, auth);
 }
 
+/*
+Reads from the sockfd until the end of the stream
+ - page_remnant is concatinated to the beginning
+ - returns a char* of the page in the heap
+*/
 char* read_page_till_end(int sockfd, char* page_remnant) {
     char buf[BUFFER_SIZE];
     memset(buf, 0, sizeof(buf));
@@ -45,6 +50,12 @@ char* read_page_till_end(int sockfd, char* page_remnant) {
     return page;
 }
 
+/*
+reads in a page from a socket taking and only reading until
+length or until the stream ends
+ - if the stream is struncated then return NULL
+ - else returns the page
+*/
 char* read_page_length(int sockfd, int length, char* page_remnant) {
     char buf[BUFFER_SIZE];
     memset(buf, 0, sizeof(buf));
@@ -69,6 +80,12 @@ char* read_page_length(int sockfd, int length, char* page_remnant) {
     return page;
 }
 
+/*
+Reads the header from the socket
+ - it may read in part of the page, this is
+ return in the page_remnant in the heap
+
+*/
 char* read_header(int sockfd, char** page_remnant) {
     char buf[BUFFER_SIZE];
     memset(buf, 0, sizeof(buf));
@@ -99,6 +116,10 @@ char* create_athorization_line(Authorization* auth) {
     return concat_create(3, AUTH_STR, auth->userid_password_64, LINE_END);
 }
 
+/*
+Sends a http get with the uri and auth
+ - returns a socket to that page
+*/
 int send_http_get(Uri uri, Authorization* auth) {
     struct addrinfo hints, *res;
     int sockfd;
