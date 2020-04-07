@@ -1,6 +1,7 @@
 #include "get_links.h"
 #include <stdio.h>
 #include <stdlib.h>
+#define _GNU_SOURCE
 #include <string.h>
 #include "../vector/vector_strings.h"
 
@@ -85,7 +86,7 @@ void get_links_symbols(vector *links, char *html, char *href_symbol) {
 
         bool valid_href = FALSE;
         while (1) {
-            href = strstr(href, href_symbol);
+            href = strcasestr(href, href_symbol);
 
             if (href == NULL) break;
             if (anchor_start < href && href < anchor_end &&
