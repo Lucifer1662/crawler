@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define _GNU_SOURCE
+char *strcasestr(const char *haystack, const char *needle);
 #include <string.h>
 #include "../vector/vector_strings.h"
 
