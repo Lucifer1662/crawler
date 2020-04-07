@@ -44,35 +44,21 @@ void convert_single_quote_to_quote(char *str) {
     }
 }
 
-void convert_anchor_to_lower(char *str) {
-    char *anchor_start_cap;
-    int len_anchor_start_cap = strlen(ANCHOR_START_CAP);
-    // while there is capital anchors
-    while ((anchor_start_cap = strstr(str, ANCHOR_START_CAP)) != NULL) {
-        // replace cap with lower
-        for (int i = 0; i < len_anchor_start_cap; i++) {
-            anchor_start_cap[i] = ANCHOR_START[i];
-        }
-    }
-}
-
 vector get_links(char *html) {
     html = strdup(html);
     convert_single_quote_to_quote(html);
-    convert_anchor_to_lower(html);
 
     vector links = create_vector_strings();
-    get_links_symbols(&links, html, HREF);
-    get_links_symbols(&links, html, HREF_CAP);
+    get_links_symbols(&links, html);
 
     free(html);
     return links;
 }
 
-void get_links_symbols(vector *links, char *html, char *href_symbol) {
+void get_links_symbols(vector *links, char *html) {
     while (*html) {
         // Find anchor start
-        char *anchor_start = strstr(html, ANCHOR_START);
+        char *anchor_start = strcasestr(html, ANCHOR_START);
         if (anchor_start == NULL) {
             break;
         }
@@ -87,7 +73,7 @@ void get_links_symbols(vector *links, char *html, char *href_symbol) {
 
         bool valid_href = FALSE;
         while (1) {
-            href = strcasestr(href, href_symbol);
+            href = strcasestr(href, HREF);
 
             if (href == NULL) break;
             if (anchor_start < href && href < anchor_end &&
@@ -95,7 +81,7 @@ void get_links_symbols(vector *links, char *html, char *href_symbol) {
                 valid_href = TRUE;
                 break;
             }
-            href += strlen(href_symbol);
+            href += strlen(HREF);
         }
 
         if (valid_href) {
