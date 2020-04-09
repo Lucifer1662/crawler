@@ -27,7 +27,9 @@
 Http_Response fetch_page_url(char* url, Authorization* auth) {
     printf("Fetching: %s\n", url);
     Uri uri = create_uri(url);
-    return fetch_page_uri(uri, auth);
+    Http_Response resp = fetch_page_uri(uri, auth);
+    printf("Retived Body:%d", resp.body != NULL);
+    return resp;
 }
 
 /*
@@ -131,7 +133,7 @@ int send_http_get(Uri uri, Authorization* auth) {
     getaddrinfo(uri.host, HTTP_PORT_STR, &hints, &res);
     sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
     connect(sockfd, res->ai_addr, res->ai_addrlen);
-
+    
     char* auth_line = strdup("");
     if (auth != NULL && auth->userid_password_64 != NULL) {
         auth_line = create_athorization_line(auth);
