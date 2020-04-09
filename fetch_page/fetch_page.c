@@ -25,10 +25,8 @@
 #define MAX_REFETCH 3
 
 Http_Response fetch_page_url(char* url, Authorization* auth) {
-    printf("Fetching: %s\n", url);
     Uri uri = create_uri(url);
     Http_Response resp = fetch_page_uri(uri, auth);
-    printf("Retived Body:%d", resp.body != NULL);
     return resp;
 }
 
@@ -170,14 +168,10 @@ Http_Response fetch_page_uri(Uri uri, Authorization* auth) {
 
         if (header.content_length == NO_HEADER_INT) {
             response.body = read_page_till_end(socket, page_remnant);
-            printf("Reading NO Length\n");
         } else {
-            
             response.body =
                 read_page_length(socket, header.content_length, page_remnant);
-            printf("Reading page length %d %d\n", header.content_length, strlen(response.body));
         }
-        printf(response.body);
 
         refetch_count ++;
 
