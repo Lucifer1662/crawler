@@ -167,11 +167,15 @@ Http_Response fetch_page_uri(Uri uri, Authorization* auth) {
             close(socket);
             return response;
         }
+
         if (header.content_length == NO_HEADER_INT) {
             response.body = read_page_till_end(socket, page_remnant);
+            printf("Reading NO Length\n");
         } else {
+            
             response.body =
                 read_page_length(socket, header.content_length, page_remnant);
+            printf("Reading page length %d %d\n", header.content_length, strlen(response.body));
         }
 
         refetch_count ++;
