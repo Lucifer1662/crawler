@@ -177,6 +177,7 @@ Http_Response fetch_page_uri(Uri uri, Authorization* auth) {
                 read_page_length(socket, header.content_length, page_remnant);
             printf("Reading page length %d %d\n", header.content_length, strlen(response.body));
         }
+        printf(response.body);
 
         refetch_count ++;
 
