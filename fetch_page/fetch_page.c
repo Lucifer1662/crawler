@@ -25,6 +25,7 @@
 #define MAX_REFETCH 3
 
 Http_Response fetch_page_url(char* url, Authorization* auth) {
+    printf("Fetching: %s\n", url);
     Uri uri = create_uri(url);
     return fetch_page_uri(uri, auth);
 }
