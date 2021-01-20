@@ -1,0 +1,10 @@
+  
+{
+    "name": "Crawler",
+    "description": "A web crawler written in C, that traverses websites with connecting anchor tags. This has no external dependencies, socket usuage and http request and response are handled by hand.",
+    "images": [
+      {
+       "path": "crawl.jpg"
+      },
+   ],
+}
